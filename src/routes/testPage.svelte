@@ -1,24 +1,24 @@
 <script>
 	import Header from '../components/Header.svelte';
-    import {questionData,chooseAns,answerCheckedByUser,attemptQuestion} from '../store'
+	import { questionData, chooseAns, answerCheckedByUser, attemptQuestion } from '../store';
 	import { onMount } from 'svelte';
 	import Navigator from '../components/Navigator.svelte';
 	let questionJsonData = []; // storing json data after fetching data
-    let checkedOpt = []; // for chossing the option (binding the ques with answer)
+	let checkedOpt = []; // for chossing the option (binding the ques with answer)
 	let currentQues = 0; // for showing one question per page
 	$: option = ['A', 'B', 'C', 'D']; // option array
-    let userAnswer=[]
-    let useCheckAns;
+	let userAnswer = [];
+	let useCheckAns;
 	// fetching json data
 	onMount(async () => {
 		const response = await fetch(`/data/question.json`);
 		questionJsonData = await response.json();
-        questionData.set(questionJsonData)
+		questionData.set(questionJsonData);
 	});
-    $: chooseAns.update((items) => {
+	$: chooseAns.update((items) => {
 		return [...checkedOpt];
 	});
-    const getClassList = (j, i) => {
+	const getClassList = (j, i) => {
 		const que = JSON.parse(questionJsonData[currentQues].content_text).question; // for collecting the queston
 		const ans = JSON.parse(questionJsonData[currentQues].content_text).answers[j].is_correct; // for collection the correct or incorrect answer(1 or 0)
 		const id = JSON.parse(questionJsonData[currentQues].content_text).answers[j].id; // for collecting the answer id(choose by user when click on radio button)
@@ -84,8 +84,8 @@
 										value={answers.answer}
 										name="radio"
 										id="radio{j}"
-                                        bind:group={checkedOpt[i]}
-                                        on:click={() => getClassList(j, i)}
+										bind:group={checkedOpt[i]}
+										on:click={() => getClassList(j, i)}
 									/>
 									{@html answers.answer}
 								</label>
@@ -102,7 +102,9 @@
 		{currentQues}
 		on:prevPage={() => (currentQues = currentQues - 1)}
 		on:nextPage={() => (currentQues = currentQues + 1)}
-        on:updateQues={(event)=>{currentQues = event.detail;}}
+		on:updateQues={(event) => {
+			currentQues = event.detail;
+		}}
 	/>
 </div>
 

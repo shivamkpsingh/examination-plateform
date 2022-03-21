@@ -24,6 +24,7 @@
 	$: if (pageNo + 1) {
 		explanationAnswer = JSON.parse($questionData[pageNo].content_text).explanation;
 		let indexOfSeq = explanationAnswer.indexOf('<seq');
+		
 		while (indexOfSeq > -1) {
 			let str1 = explanationAnswer.substr(indexOfSeq, 14);
 			let currectAnswer = explanationAnswer.charAt(indexOfSeq + 9);

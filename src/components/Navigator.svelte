@@ -1,9 +1,9 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import Confirmation from './Confirmation.svelte';
+	import Confirmation from './confirmation.svelte';
 	import { reviewNavigator, chooseAns } from '../store.js';
 	import Sidebar from './Sidebar.svelte';
-	import Timer from './Timer.svelte';
+	import Timer from '../components/Timer.svelte';
 	const dispatch = createEventDispatcher();
 	export let currentQues; //for changing current question (for next and pre)
 	let sidebar_show = false;
@@ -18,7 +18,7 @@
 	const nextPage = () => {
 		dispatch('nextPage');
 	};
-    //  update question click on sidebar
+	//  update question click on sidebar
 	const displayQuesNum = (event) => {
 		dispatch('updateQues', event.detail);
 	};
@@ -34,23 +34,44 @@
 			List
 		</button>
 		<Sidebar bind:show={sidebar_show} on:displayQuesNum={displayQuesNum} />
-		{#if currentQues < 1}
-			<button disabled>Previous</button>
+		<!-- svelte-ignore a11y-accesskey -->
+		{#if !$reviewNavigator}
+		<button
+		on:click={prevPage}
+		class="btn btn-light"
+		accesskey="v"
+		disabled={currentQues < 1 ? true : false}>Previous</button
+	>
 		{:else}
-			<button class="btn btn-light" on:click={prevPage}>Previous</button>
+		<button
+		on:click={prevPage}
+		class="btn btn-light"
+		accesskey="v"
+		disabled={questionId < 1 ? true : false}>Previous</button
+	>
 		{/if}
-        {#if  !$reviewNavigator}
+		{#if !$reviewNavigator}
 			<span>{currentQues + 1} of 11</span>
-        {:else}
-			<span>{questionId + 1} of 11</span>
-        {/if}
-		{#if currentQues + 1 > 10}
-			<!-- svelte-ignore a11y-accesskey -->
-			<button disabled accesskey="n">Next</button>
 		{:else}
-			<!-- svelte-ignore a11y-accesskey -->
-			<button on:click={nextPage} class="btn btn-light" accesskey="n">Next</button>
+			<span>{questionId + 1} of 11</span>
 		{/if}
+		<!-- svelte-ignore a11y-accesskey -->
+		{#if !$reviewNavigator}
+			<button
+				on:click={nextPage}
+				class="btn btn-light"
+				accesskey="n"
+				disabled={currentQues + 1 > 10 ? true : false}>Next</button
+			>
+		{:else}
+			<button
+				on:click={nextPage}
+				class="btn btn-light"
+				accesskey="n"
+				disabled={questionId + 1 > 10 ? true : false}>Next</button
+			>
+		{/if}
+
 		<!-- svelte-ignore a11y-accesskey -->
 		{#if !$reviewNavigator}
 			<button class="btn btn-light" accesskey="t" on:click={() => (confirm_show = !confirm_show)}
